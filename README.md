@@ -37,12 +37,12 @@
 
 ### 安装
 1. 确保你的机器上已运行 OpenClaw 环境。
-2. 下载本仓库的 `linux-openclaw-audit.skill` 包，或者直接让你的 OpenClaw Agent 读取本目录。
+2. 下载本仓库的 `linux-audit.skill` 包，或者直接让你的 OpenClaw Agent 读取本目录。
 
 ### 触发方式
 在你的客户端（如飞书、Discord、Terminal）直接对你的 OpenClaw 说：
 - *"给我做个服务器全栈安全体检"*
-- *"运行 linux-openclaw-audit"*
+- *"运行 linux-audit"*
 
 ### 依赖组件
 体检脚本 (`scripts/audit.sh`) 会自动进行 Pre-flight 检查。如果你的系统缺失以下组件，Agent 会主动向你申请安装权限：

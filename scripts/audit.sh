@@ -11,7 +11,16 @@ echo "=========================================================="
 # Pre-flight Check: Ensure required audit tools are installed
 # --------------------------------------------------------
 MISSING_TOOLS=()
-if ! command -v ufw &> /dev/null; then MISSING_TOOLS+=("ufw"); fi
+# --- Start of UFW dynamic detection ---
+if command -v ufw &> /dev/null; then
+    UFW_CMD="ufw"
+elif [ -x "/usr/sbin/ufw" ]; then
+    UFW_CMD="/usr/sbin/ufw"
+else
+    MISSING_TOOLS+=("ufw")
+fi
+# --- End of UFW dynamic detection ---
+
 if ! command -v rkhunter &> /dev/null; then MISSING_TOOLS+=("rkhunter"); fi
 
 if [ ${#MISSING_TOOLS[@]} -ne 0 ]; then
@@ -48,10 +57,11 @@ echo
 
 echo "--- 🛠️ Phase 1: Network & Exposure ---"
 # UFW Status
-if command -v ufw &> /dev/null; then
-    UFW_STAT=$(sudo ufw status | grep Status | awk '{print $2}')
+if [ -n "$UFW_CMD" ]; then
+    UFW_STAT=$(sudo "$UFW_CMD" status | grep Status | awk '{print $2}')
     if [ "$UFW_STAT" == "active" ]; then check_pass "UFW is active"; else check_warn "UFW is inactive"; fi
 else
+    # This case should be caught by pre-flight, but as a fallback:
     check_warn "UFW not installed/found"
 fi
 
